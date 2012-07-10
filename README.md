@@ -21,7 +21,7 @@ comment ={"body": ‘You said this was an eclipsing binary but this is a known K
 
 --------------
 
-Zoonibot uses its Zooniverse API key to access the Talk API. It needs to identify with the username: zoonibot and the password: d1b5be9242fb65de9372
+Zoonibot uses its Zooniverse API key to access the Talk API. It needs to identify with the username: zoonibot and the password obtained from the usual place.
 Example API calls are based on the following curl requests from @mparrish who developed the API. 
 
 # Post a comment to a discussion
@@ -33,25 +33,25 @@ curl -H Content-Type:application/json -H Accept:application/json -X POST http://
 }'
 
 # Filter by tags (OR)
-curl -H Content-Type:application/json -H Accept:application/json -X GET http://parrish:499cac9411b300a0a59a@localhost:3000/api/comments.json -d '{
+curl -H Content-Type:application/json -H Accept:application/json -X GET http://LOGIN@localhost:3000/api/comments.json -d '{
  "tags": ["planet"]
 }'
 
 # Filter by tags with a starting timestamp
-curl -H Content-Type:application/json -H Accept:application/json -X GET http://parrish:499cac9411b300a0a59a@localhost:3000/api/comments.json -d '{
+curl -H Content-Type:application/json -H Accept:application/json -X GET http://LOGIN@localhost:3000/api/comments.json -d '{
  "tags": ["planet"],
  "since": "2012-01-01 00:00:00 UTC"
 }'
 
 # Return 20 results (maximum of 50 per page)
-curl -H Content-Type:application/json -H Accept:application/json -X GET http://parrish:499cac9411b300a0a59a@localhost:3000/api/comments.json -d '{
+curl -H Content-Type:application/json -H Accept:application/json -X GET http://LOGIN@localhost:3000/api/comments.json -d '{
  "tags": ["planet"],
  "since": "2012-01-01 00:00:00 UTC",
  "per_page": 20
 }'
 
 # Return the next 20 results
-curl -H Content-Type:application/json -H Accept:application/json -X GET http://parrish:499cac9411b300a0a59a@localhost:3000/api/comments.json -d '{
+curl -H Content-Type:application/json -H Accept:application/json -X GET http://LOGIN@localhost:3000/api/comments.json -d '{
  "tags": ["planet"],
  "since": "2012-01-01 00:00:00 UTC",
  "per_page": 20,
@@ -60,7 +60,7 @@ curl -H Content-Type:application/json -H Accept:application/json -X GET http://p
 
 ---------
 
-Zoonibot also has a Twitter account (username: zoonibot, password: zoonibotHdA) and details of its functionality needs to go here. 
+Zoonibot also has a Twitter account (Email Chris for passwords) and details of its functionality needs to go here. 
 
 __________
 
