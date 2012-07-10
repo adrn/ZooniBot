@@ -1,14 +1,15 @@
-""" """
+""" TODO: Describe this module! """
+
 # Standard Library
-import os,sys
 import base64
 import urllib, urllib2
 import json
+from time import sleep
 
 # Project
 import entry
-from time import sleep
 import zootime
+
 
 class Bot(object):
 
@@ -17,21 +18,25 @@ class Bot(object):
 
     def find_and_respond(self, finder, responder, wait=1):
         """ Use finder and responder utilities to respond to comments
-        Parameters
-        ----------
-        finder : function to return Comments object
-        responder : function to create ZooniverseComments from a input comment
+
+            Parameters
+            ----------
+            finder : function
+                A function that returns Comments object
+            responder : function
+                A function to create 'ZooniverseComment's from an input comment
         """
         for comment in finder(self):
             sleep(wait)
             r = responder(comment)
             self.post(r)
 
-
 class CommentBot(Bot):
 
     def __init__(self, username, api_key, base_url):
-        """ Parameters
+        """ A bot built specifically to automatically comment on forums
+
+            Parameters
             ----------
             username : string
                 The username to connect to the API.
@@ -64,52 +69,99 @@ class ZooniBot(CommentBot):
         zooni_base_url = "http://talk.planethunters.org/api/comments.json"
         super(ZooniBot, self).__init__(username, api_key, zooni_base_url)
 
+    def _get_request(self, url, header=None, urlcls=None):
+        """ Interface for get requests
+
+        Parameters
+        ----------
+        url : string of url
+        header : dict (optional) header data
+        urlcls : class (optional) substitute interface for urllib2
+
+        Returns
+        -------
+        A url response object
+        """
+        header = header or self._default_header()
+        urlcls = urlcls or urllib2
+        request = urlcls.Request(url, headers=header)
+        response = urlcls.urlopen(request)
+        return response
+
+    def _post_request(self, data, url=None, header=None, urlcls=None):
+        """ Interface for post requests
+
+        Parameters
+        ----------
+        data : dict of post data
+        url : optional url to post to (if not base url)
+        header : dict (optional) header data
+        urlcls : class (optional) substitute interface for urllib2
+
+        Returns
+        -------
+        A url response object
+        """
+        url = url or self.base_url
+        header = header or self._default_header()
+        urlcls = urlcls or urllib2
+        request = urlcls.Request(url, headers=header, data=json.dumps(data))
+        response = urlcls.urlopen(request)
+        return response
+
     def post(self, zooniverse_comment):
-        """ Post the comment to the Zooniverse by zoonibot """
+        """ Post the comment to the Zooniverse by zoonibot
+
+            Parameters
+            ----------
+            zooniverse_comment : ZooniverseComment
+                Posts the specified comment by using the text from
+                ZooniverseComment.comment.body and posting to the discussion
+                ZooniverseComment.discussion.id
+
+            ..Note::
+                Fails if the response code is *not* 201, e.g. 'create'.
+        """
 
         discussion_id = zooniverse_comment.discussion.id
         comment = zooniverse_comment.comment
-        data = {"discussion_id" : discussion_id, "comment" : {"body" : comment.body}}
-
-        # Form the HTTP header to pass with the POST request
-        headers = dict()
-        headers["Content-Type"] = "application/json"
-        base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
-        headers["Authorization"] = "Basic {}".format(base64string)
-
-        request = urllib2.Request(self.base_url, headers=headers, data=json.dumps(data))
-        response = urllib2.urlopen(request)
+        data = {"discussion_id" : discussion_id,
+                "comment" : {"body" : comment.body}}
+        result = self._post_request(data)
         response_code = response.getcode()
 
         if response_code != 201:
             raise ValueError("Post failed with response code: {}".format(response_code))
 
+    def _default_header(self):
+        """Form the HTTP header to pass with the POST request"""
+        headers = dict()
+        headers["Content-Type"] = "application/json"
+        base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
+        headers["Authorization"] = "Basic {}".format(base64string)
+        return headers
 
     def search_comments(self, tags=[],
                         since_date=zootime.zoo_yesterday()):
         """ """
         # TODO: check tags to make sure it's a list-like container
-        
+
         per_page = 10
-        
+
         def get_data(page):
             data = {"page" : page, \
                     "per_page" : per_page, \
                     "since" : since_date}
-            
-            # APW TODO: this is hellish.. maybe we move to using requests?
+            # APW TODO: this is hellish.. maybe we move to using 'request' package?
             params = urllib.urlencode(data)
-            params = "{}{}".format(params, urllib.quote("&tags=".join(tags)))
-            
-            headers = dict()
-            headers["Content-Type"] = "application/json"
-            base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
-            headers["Authorization"] = "Basic {}".format(base64string)
 
-            request = urllib2.Request("{}?{}".format(self.base_url,params), headers=headers)
-            json_data = json.loads(urllib2.urlopen(request).read())
+            params = "{}{}".format(params, encode_tags(tags))
+            headers = self._default_header()
+            url = "{}?{}".format(self.base_url,params)
+            response = self._get_request(url).read()
+            json_data = json.loads(response)
             return json_data
-        
+
         json_data = get_data(1)
         total_pages = int(json_data["total_pages"])
 
@@ -134,3 +186,9 @@ def comment_dictionary_to_zooniversecomment(comment_dict):
         source=entry.Source(**comment_dict["source"]) \
     )
 
+
+def encode_tags(tags):
+    result = urllib.quote("&tags=".join(tags))
+    if len(tags) > 0:
+        result = '&tags=' + result
+    return result

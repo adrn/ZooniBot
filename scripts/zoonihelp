@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+from zoonibot.bot import ZooniBot
+from zoonibot.responses import help_response
+from zoonibot.finders import find_help_tags
+
+def main():
+    bot = ZooniBot(username="zoonibot", api_key="d1b5be9242fb65de9372")
+
+    for t in find_help_tags(bot):
+        print "Responding to %s with %s" % (t, help_response(t))
+    bot.find_and_respond(find_help_tags, help_response)
+
+
+if __name__ == "__main__":
+    main()
