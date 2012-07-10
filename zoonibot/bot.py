@@ -106,12 +106,10 @@ class ZooniBot(CommentBot):
             headers["Authorization"] = "Basic {}".format(base64string)
 
             request = urllib2.Request("{}?{}".format(self.base_url,params), headers=headers)
-            print "{}?{}".format(self.base_url,params)
             json_data = json.loads(urllib2.urlopen(request).read())
             return json_data
         
         json_data = get_data(1)
-        print json_data
         total_pages = int(json_data["total_pages"])
 
         # returns a generator for comment objects
