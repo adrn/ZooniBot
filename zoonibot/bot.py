@@ -16,7 +16,7 @@ class Bot(object):
 
     def find_and_respond(self, finder, responder, wait=1):
         """ Use finder and responder utilities to respond to comments
-            
+
             Parameters
             ----------
             finder : function
@@ -33,7 +33,7 @@ class CommentBot(Bot):
 
     def __init__(self, username, api_key, base_url):
         """ A bot built specifically to automatically comment on forums
-        
+
             Parameters
             ----------
             username : string
@@ -68,15 +68,15 @@ class ZooniBot(CommentBot):
         super(ZooniBot, self).__init__(username, api_key, zooni_base_url)
 
     def post(self, zooniverse_comment):
-        """ Post the comment to the Zooniverse by zoonibot 
-            
+        """ Post the comment to the Zooniverse by zoonibot
+
             Parameters
             ----------
             zooniverse_comment : ZooniverseComment
-                Posts the specified comment by using the text from 
+                Posts the specified comment by using the text from
                 ZooniverseComment.comment.body and posting to the discussion
                 ZooniverseComment.discussion.id
-            
+
             ..Note::
                 Fails if the response code is *not* 201, e.g. 'create'.
         """
@@ -103,18 +103,18 @@ class ZooniBot(CommentBot):
         """ """
         # TODO: since_data parameter should be *yesterday*, using datetime module
         # TODO: check tags to make sure it's a list-like container
-        
+
         per_page = 10
-        
+
         def get_data(page):
             data = {"page" : page, \
                     "per_page" : per_page, \
                     "since" : since_date}
-            
             # APW TODO: this is hellish.. maybe we move to using 'request' package?
             params = urllib.urlencode(data)
-            params = "{}{}".format(params, urllib.quote("&tags=".join(tags)))
-            
+
+            params = "{}{}".format(params, encode_tags(tags))
+
             headers = dict()
             headers["Content-Type"] = "application/json"
             base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
@@ -123,7 +123,7 @@ class ZooniBot(CommentBot):
             request = urllib2.Request("{}?{}".format(self.base_url,params), headers=headers)
             json_data = json.loads(urllib2.urlopen(request).read())
             return json_data
-        
+
         json_data = get_data(1)
         total_pages = int(json_data["total_pages"])
 
@@ -148,3 +148,9 @@ def comment_dictionary_to_zooniversecomment(comment_dict):
         source=entry.Source(**comment_dict["source"]) \
     )
 
+
+def encode_tags(tags):
+    result = urllib.quote("&tags=".join(tags))
+    if len(tags) > 0:
+        result = '&tags=' + result
+    return result
