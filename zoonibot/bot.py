@@ -66,27 +66,27 @@ class ZooniBot(CommentBot):
         """
         zooni_base_url = "http://talk.planethunters.org/api/comments.json"
         super(ZooniBot, self).__init__(username, api_key, zooni_base_url)
+        self.urlcls = None
 
-    def _get_request(self, url, header=None, urlcls=None):
+    def _get_request(self, url, header=None):
         """ Interface for get requests
 
         Parameters
         ----------
         url : string of url
         header : dict (optional) header data
-        urlcls : class (optional) substitute interface for urllib2
 
         Returns
         -------
         A url response object
         """
         header = header or self._default_header()
-        urlcls = urlcls or urllib2
+        urlcls = self.urlcls or urllib2
         request = urlcls.Request(url, headers=header)
         response = urlcls.urlopen(request)
         return response
 
-    def _post_request(self, data, url=None, header=None, urlcls=None):
+    def _post_request(self, data, url=None, header=None):
         """ Interface for post requests
 
         Parameters
@@ -94,7 +94,6 @@ class ZooniBot(CommentBot):
         data : dict of post data
         url : optional url to post to (if not base url)
         header : dict (optional) header data
-        urlcls : class (optional) substitute interface for urllib2
 
         Returns
         -------
@@ -102,7 +101,7 @@ class ZooniBot(CommentBot):
         """
         url = url or self.base_url
         header = header or self._default_header()
-        urlcls = urlcls or urllib2
+        urlcls = self.urlcls or urllib2
         request = urlcls.Request(url, headers=header, data=json.dumps(data))
         response = urlcls.urlopen(request)
         return response
@@ -135,7 +134,8 @@ class ZooniBot(CommentBot):
         """Form the HTTP header to pass with the POST request"""
         headers = dict()
         headers["Content-Type"] = "application/json"
-        base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
+        base64string = base64.encodestring(
+            "{}:{}".format(self.username, self.api_key))[:-1]
         headers["Authorization"] = "Basic {}".format(base64string)
         return headers
 
@@ -152,9 +152,7 @@ class ZooniBot(CommentBot):
                     "since" : since_date}
             # APW TODO: this is hellish.. maybe we move to using 'request' package?
             params = urllib.urlencode(data)
-
             params = "{}{}".format(params, encode_tags(tags))
-            headers = self._default_header()
             url = "{}?{}".format(self.base_url,params)
             response = self._get_request(url).read()
             json_data = json.loads(response)
@@ -175,7 +173,7 @@ class ZooniBot(CommentBot):
                 yield comment_dictionary_to_zooniversecomment(comment_dict)
 
 def comment_dictionary_to_zooniversecomment(comment_dict):
-    """ """
+    """ convert a comment json entry into a ZooniverseComment object"""
     return entry.ZooniverseComment(
         comment=entry.Comment(**comment_dict["comment"]), \
         author=entry.Author(**comment_dict["author"]), \
@@ -186,7 +184,7 @@ def comment_dictionary_to_zooniversecomment(comment_dict):
 
 
 def encode_tags(tags):
-    result = urllib.quote("&tags=".join(tags))
+    result = '&'.join([urllib.urlencode({'tags':t}) for t in tags])
     if len(tags) > 0:
         result = '&tags=' + result
     return result
