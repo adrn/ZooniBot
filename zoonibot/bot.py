@@ -67,6 +67,46 @@ class ZooniBot(CommentBot):
         zooni_base_url = "http://talk.planethunters.org/api/comments.json"
         super(ZooniBot, self).__init__(username, api_key, zooni_base_url)
 
+    def _get_request(self, url, header=None, urlcls=None):
+        """ Interface for get requests
+
+        Parameters
+        ----------
+        url : string of url
+        header : dict (optional) header data
+        urlcls : class (optional) substitute interface for urllib2
+
+        Returns
+        -------
+        A url response object
+        """
+        header = header or self._default_header()
+        urlcls = urlcls or urllib2
+        request = urlcls.Request(url, headers=header)
+        response = urlcls.urlopen(request)
+        return response
+
+    def _post_request(self, data, url=None, header=None, urlcls=None):
+        """ Interface for post requests
+
+        Parameters
+        ----------
+        data : dict of post data
+        url : optional url to post to (if not base url)
+        header : dict (optional) header data
+        urlcls : class (optional) substitute interface for urllib2
+
+        Returns
+        -------
+        A url response object
+        """
+        url = url or self.base_url
+        header = header or self._default_header()
+        urlcls = urlcls or urllib2
+        request = urlcls.Request(url, headers=header, data=json.dumps(data))
+        response = urlcls.urlopen(request)
+        return response
+
     def post(self, zooniverse_comment):
         """ Post the comment to the Zooniverse by zoonibot
 
@@ -83,21 +123,21 @@ class ZooniBot(CommentBot):
 
         discussion_id = zooniverse_comment.discussion.id
         comment = zooniverse_comment.comment
-        data = {"discussion_id" : discussion_id, "comment" : {"body" : comment.body}}
-
-        # Form the HTTP header to pass with the POST request
-        headers = dict()
-        headers["Content-Type"] = "application/json"
-        base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
-        headers["Authorization"] = "Basic {}".format(base64string)
-
-        # Create the request object with the necessary header and JSON data declarations
-        request = urllib2.Request(self.base_url, headers=headers, data=json.dumps(data))
-        response = urllib2.urlopen(request)
+        data = {"discussion_id" : discussion_id,
+                "comment" : {"body" : comment.body}}
+        result = self._post_request(data)
         response_code = response.getcode()
 
         if response_code != 201:
             raise ValueError("Post failed with response code: {}".format(response_code))
+
+    def _default_header(self):
+        """Form the HTTP header to pass with the POST request"""
+        headers = dict()
+        headers["Content-Type"] = "application/json"
+        base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
+        headers["Authorization"] = "Basic {}".format(base64string)
+        return headers
 
     def search_comments(self, tags=[], since_date="2012-07-10"):
         """ """
@@ -114,14 +154,10 @@ class ZooniBot(CommentBot):
             params = urllib.urlencode(data)
 
             params = "{}{}".format(params, encode_tags(tags))
-
-            headers = dict()
-            headers["Content-Type"] = "application/json"
-            base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
-            headers["Authorization"] = "Basic {}".format(base64string)
-
-            request = urllib2.Request("{}?{}".format(self.base_url,params), headers=headers)
-            json_data = json.loads(urllib2.urlopen(request).read())
+            headers = self._default_header()
+            url = "{}?{}".format(self.base_url,params)
+            response = self._get_request(url).read()
+            json_data = json.loads(response)
             return json_data
 
         json_data = get_data(1)
