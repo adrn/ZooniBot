@@ -4,7 +4,10 @@ import os,sys
 import base64
 import urllib, urllib2
 import json
-    
+
+# Project
+import entry
+
 class Bot(object):
     pass
     
@@ -64,19 +67,56 @@ class ZooniBot(CommentBot):
         if response_code != 201:
             raise ValueError("Post failed with response code: {}".format(response_code))
     
-    def search_comments(self, tags):
+    def search_comments(self, tags, since_date="2012-07-10"):
         """ """
+        # TODO: since_data parameter should be *yesterday*, using datetime module
+
+        per_page = 10
         
-        data = [("page", 1), ("per_page", 10), ("since", "2012-05-02")]
+        data = {"page" : 1, \
+                "per_page" : per_page, \
+                "since" : since_date,
+                "tags" : tags}
         
         headers = dict()
         headers["Content-Type"] = "application/json"
         base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
         headers["Authorization"] = "Basic {}".format(base64string)
         
-        request = urllib2.Request(self.base_url, headers=headers)
+        request = urllib2.Request(self.base_url, headers=headers, data=json.dumps(data))
         json_data = json.loads(urllib2.urlopen(request).read())
         
-        print json_data
+        total_pages = int(json_data["total_pages"])
         
         # returns a generator for comment objects
+        for comment_dict in json_data["comments"]:
+            yield comment_dictionary_to_zooniversecomment(comment_dict)
+        
+        for page_number in range(2, total_pages+1):
+            # TODO: This is copy-pasted code. Wrap in a function
+            data = [("page", page_number), \
+                ("per_page", per_page), \
+                ("since", since_date)]
+            
+            headers = dict()
+            headers["Content-Type"] = "application/json"
+            base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
+            headers["Authorization"] = "Basic {}".format(base64string)
+            
+            request = urllib2.Request(self.base_url, headers=headers, data=json.dumps(data))
+            json_data = json.loads(urllib2.urlopen(request).read())
+            
+            # returns a generator for comment objects
+            for comment_dict in json_data["comments"]:
+                yield comment_dictionary_to_zooniversecomment(comment_dict)
+            
+
+def comment_dictionary_to_zooniversecomment(comment_dict):
+    """ """
+    return entry.ZooniverseComment(
+        comment=entry.Comment(**comment_dict["comment"]), \
+        author=entry.Author(**comment_dict["author"]), \
+        discussion=entry.Discussion(**comment_dict["discussion"]), \
+        light_curve=entry.LightCurve(**comment_dict["light_curve"]), \
+        source=entry.Source(**comment_dict["source"]) \
+    )
