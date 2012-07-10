@@ -1,7 +1,7 @@
 """ """
-
 # Standard Library
 import os,sys
+import base64
 import urllib, urllib2
 import json
     
@@ -9,7 +9,21 @@ class Bot(object):
     pass
     
 class CommentBot(Bot):
-    pass
+    
+    def __init__(self, username, api_key, base_url):
+        """ Parameters
+            ----------
+            username : string
+                The username to connect to the API.
+            key : string
+                The unique API key for the user specified.
+            base_url : string
+                The base URL of the site we will be sending requests to.
+                e.g. http://<user>:<key>@talk.planethunters.org/api/comments.json
+        """
+        self.username = username
+        self.api_key = api_key
+        self.base_url = base_url
     
 class ZooniBot(CommentBot):
     """ The ZooniBot is an automated robot for commenting on Zooniverse 
@@ -19,12 +33,50 @@ class ZooniBot(CommentBot):
         instantiator.
     """
     
-    def __init__(self, api):
-        self.api = api
+    def __init__(self, username, api_key):
+        """ Parameters
+            ----------
+            username : string
+                The username to connect to the API.
+            key : string
+                The unique API key for the user specified.
+        """
+        zooni_base_url = "http://talk.planethunters.org/api/comments.json"
+        super(ZooniBot, self).__init__(username, api_key, zooni_base_url)
     
-    def post(comment):
+    def post(self, zooniverse_comment):
         """ Post the comment to the Zooniverse by zoonibot """
-        raise NotImplementedError()
+        
+        discussion_id = zooniverse_comment.discussion.id
+        comment = zooniverse_comment.comment
+        data = {"discussion_id" : discussion_id, "comment" : {"body" : comment.body}}
+        
+        # Form the HTTP header to pass with the POST request
+        headers = dict()
+        headers["Content-Type"] = "application/json"
+        base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
+        headers["Authorization"] = "Basic {}".format(base64string)
+        
+        request = urllib2.Request(self.base_url, headers=headers, data=json.dumps(data))
+        response = urllib2.urlopen(request)
+        response_code = response.getcode()
+        
+        if response_code != 200:
+            raise ValueError("Post failed with response code: {}".format(response_code))
     
-    def search_comments(tags):
-        raise NotImplementedError()
+    def search_comments(self, tags):
+        """ """
+        
+        data = [("page", 1), ("per_page", 10), ("since", "2012-05-02")]
+        
+        headers = dict()
+        headers["Content-Type"] = "application/json"
+        base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
+        headers["Authorization"] = "Basic {}".format(base64string)
+        
+        request = urllib2.Request(self.base_url, headers=headers)
+        json_data = json.loads(urllib2.urlopen(request).read())
+        
+        print json_data
+        
+        # returns a generator for comment objects
