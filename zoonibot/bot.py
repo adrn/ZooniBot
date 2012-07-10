@@ -61,7 +61,7 @@ class ZooniBot(CommentBot):
         response = urllib2.urlopen(request)
         response_code = response.getcode()
         
-        if response_code != 200:
+        if response_code != 201:
             raise ValueError("Post failed with response code: {}".format(response_code))
     
     def search_comments(self, tags):
