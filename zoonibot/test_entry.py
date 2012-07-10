@@ -19,8 +19,8 @@ class TestEntries(object):
             self.assert_valid_present(cls, field)
         self.assert_invalid_not_present(cls, '___INVALID___')
 
-    def test_comment_container(self):
-        self.assert_valid(entry.CommentContainer)
+    def test_zooniverse_comment(self):
+        self.assert_valid(entry.ZooniverseComment)
 
     def test_comment(self):
         self.assert_valid(entry.Comment)
