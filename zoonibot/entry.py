@@ -1,3 +1,5 @@
+""" TODO: Describe this module! """
+
 class Entry(object):
     _fields = []
     def __init__(self, **kwargs):

@@ -1,3 +1,5 @@
+""" TODO: Describe this module! """
+
 def comments_without_zoonibot_responses(bot, comments):
     zoos = bot.search_comments(['zoonibotans'], since_date='2012-07-10')
     ids = set(z.discussion.id for z in zoos)

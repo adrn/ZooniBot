@@ -1,13 +1,13 @@
-""" """
+""" TODO: Describe this module! """
+
 # Standard Library
-import os,sys
 import base64
 import urllib, urllib2
 import json
+from time import sleep
 
 # Project
 import entry
-from time import sleep
 
 class Bot(object):
 
@@ -16,21 +16,25 @@ class Bot(object):
 
     def find_and_respond(self, finder, responder, wait=1):
         """ Use finder and responder utilities to respond to comments
-        Parameters
-        ----------
-        finder : function to return Comments object
-        responder : function to create ZooniverseComments from a input comment
+
+            Parameters
+            ----------
+            finder : function
+                A function that returns Comments object
+            responder : function
+                A function to create 'ZooniverseComment's from an input comment
         """
         for comment in finder(self):
             sleep(wait)
             r = responder(comment)
             self.post(r)
 
-
 class CommentBot(Bot):
 
     def __init__(self, username, api_key, base_url):
-        """ Parameters
+        """ A bot built specifically to automatically comment on forums
+
+            Parameters
             ----------
             username : string
                 The username to connect to the API.
@@ -64,7 +68,18 @@ class ZooniBot(CommentBot):
         super(ZooniBot, self).__init__(username, api_key, zooni_base_url)
 
     def post(self, zooniverse_comment):
-        """ Post the comment to the Zooniverse by zoonibot """
+        """ Post the comment to the Zooniverse by zoonibot
+
+            Parameters
+            ----------
+            zooniverse_comment : ZooniverseComment
+                Posts the specified comment by using the text from
+                ZooniverseComment.comment.body and posting to the discussion
+                ZooniverseComment.discussion.id
+
+            ..Note::
+                Fails if the response code is *not* 201, e.g. 'create'.
+        """
 
         discussion_id = zooniverse_comment.discussion.id
         comment = zooniverse_comment.comment
@@ -76,13 +91,13 @@ class ZooniBot(CommentBot):
         base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
         headers["Authorization"] = "Basic {}".format(base64string)
 
+        # Create the request object with the necessary header and JSON data declarations
         request = urllib2.Request(self.base_url, headers=headers, data=json.dumps(data))
         response = urllib2.urlopen(request)
         response_code = response.getcode()
 
         if response_code != 201:
             raise ValueError("Post failed with response code: {}".format(response_code))
-
 
     def search_comments(self, tags=[], since_date="2012-07-10"):
         """ """
@@ -95,8 +110,7 @@ class ZooniBot(CommentBot):
             data = {"page" : page, \
                     "per_page" : per_page, \
                     "since" : since_date}
-
-            # APW TODO: this is hellish.. maybe we move to using requests?
+            # APW TODO: this is hellish.. maybe we move to using 'request' package?
             params = urllib.urlencode(data)
 
             params = "{}{}".format(params, encode_tags(tags))
