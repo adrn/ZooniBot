@@ -70,6 +70,15 @@ class ZooniBot(CommentBot):
         super(ZooniBot, self).__init__(username, api_key, zooni_base_url)
         self.urlcls = None
 
+    def _default_header(self):
+        """Form the HTTP header to pass with the POST request"""
+        headers = dict()
+        headers["Content-Type"] = "application/json"
+        base64string = base64.encodestring(
+            "{}:{}".format(self.username, self.api_key))[:-1]
+        headers["Authorization"] = "Basic {}".format(base64string)
+        return headers
+
     def _get_request(self, url, header=None):
         """ Interface for get requests
 
@@ -132,31 +141,23 @@ class ZooniBot(CommentBot):
         if response_code != 201:
             raise ValueError("Post failed with response code: {}".format(response_code))
 
-    def _default_header(self):
-        """Form the HTTP header to pass with the POST request"""
-        headers = dict()
-        headers["Content-Type"] = "application/json"
-        base64string = base64.encodestring(
-            "{}:{}".format(self.username, self.api_key))[:-1]
-        headers["Authorization"] = "Basic {}".format(base64string)
-        return headers
-
-    def search_comments(self, tags=[],
-                        since_date=zootime.zoo_yesterday()):
-        """ """
+    def search_comments(self, tags=None, since_date=None):
+        """Return  list of ZooniverseComponents for a comment search"""
         # TODO: check tags to make sure it's a list-like container
-
+        tags = tags or []
         per_page = 10
+        since = since_date or '2012-01-01' # or zootime.zoo_yesterday()
 
         def get_data(page):
-            data = {"page" : page, \
-                    "per_page" : per_page, \
-                    "since" : "2012-01-01"} ## TODO: FIX
-            # APW TODO: this is hellish.. maybe we move to using 'request' package?
-            params = urllib.urlencode(data)
-            params = "{}{}".format(params, encode_tags(tags))
-            url = "{}?{}".format(self.base_url,params)
-            print url
+            # APW TODO: this is hellish.. maybe we move to
+            # using 'request' package?
+
+            data = [('page', page),
+                    ('per_page', per_page),
+                    ('since', since)]
+            data.extend([('tags', t) for t in tags])
+            url = "{}?{}".format(self.base_url, urllib.urlencode(data))
+
             response = self._get_request(url).read()
             json_data = json.loads(response)
             return json_data
@@ -187,6 +188,9 @@ def comment_dictionary_to_zooniversecomment(comment_dict):
 
 
 def encode_tags(tags):
+    """ Converts a list of tags to a long &tags=item string
+    tags are urlencoded to escape proper characters.
+    """
     result = '&'.join([urllib.urlencode({'tags':t}) for t in tags])
     if len(tags) != 0:
         result = '&' + result

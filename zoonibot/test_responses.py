@@ -12,4 +12,4 @@ def test_yourmom():
 
 def test_help_response():
     result = responses.help_response(TEST_ZOOCOMMENT)
-    assert result.comment.body.startswith("'Hiya")
+    assert result.comment.body.startswith("Hiya")
