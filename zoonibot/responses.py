@@ -26,5 +26,5 @@ def yourmom_response(zoocomment):
 
 def help_response(zoocomment):
 
-    result = entry.Comment(body="'Hiya Have you tried our [tutorial video](http://www.planethunters.org/site_guide#video "") and [site guide](http://www.planethunters.org/site_guide "") - they are both good resources for new people")
+    result = entry.Comment(body="""Hiya Have you tried our [tutorial video](http://www.planethunters.org/site_guide#video "") and [site guide](http://www.planethunters.org/site_guide "") - they are both good resources for new people #zoonibotans""")
     return response_packer(zoocomment, result)
