@@ -27,7 +27,6 @@ class TestZoonibot(object):
 
     def test_post(self):
         """ WARNING! This *actually* creates a post! """
-        return
         # Create a ZooniBot instance
         zoonibot = ZooniBot(username="zoonibot", \
                             api_key="d1b5be9242fb65de9372")
