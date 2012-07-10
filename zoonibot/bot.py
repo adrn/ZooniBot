@@ -84,29 +84,34 @@ class ZooniBot(CommentBot):
             raise ValueError("Post failed with response code: {}".format(response_code))
 
 
-    def search_comments(self, tags, since_date="2012-07-10"):
+    def search_comments(self, tags=[], since_date="2012-07-10"):
         """ """
         # TODO: since_data parameter should be *yesterday*, using datetime module
-        # TODO: check tags to make sure it's a container
+        # TODO: check tags to make sure it's a list-like container
         
         per_page = 10
-
+        
         def get_data(page):
             data = {"page" : page, \
                     "per_page" : per_page, \
-                    "since" : since_date,
-                    "tags" : tags}
-
+                    "since" : since_date}
+            
+            # APW TODO: this is hellish.. maybe we move to using requests?
+            params = urllib.urlencode(data)
+            params = "{}{}".format(params, urllib.quote("&tags=".join(tags)))
+            
             headers = dict()
             headers["Content-Type"] = "application/json"
             base64string = base64.encodestring("{}:{}".format(self.username, self.api_key))[:-1]
             headers["Authorization"] = "Basic {}".format(base64string)
 
-            request = urllib2.Request(self.base_url, headers=headers, data=json.dumps(data))
+            request = urllib2.Request("{}?{}".format(self.base_url,params), headers=headers)
+            print "{}?{}".format(self.base_url,params)
             json_data = json.loads(urllib2.urlopen(request).read())
             return json_data
-
+        
         json_data = get_data(1)
+        print json_data
         total_pages = int(json_data["total_pages"])
 
         # returns a generator for comment objects

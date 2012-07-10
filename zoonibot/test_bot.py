@@ -27,9 +27,7 @@ class TestZoonibot(object):
 
     def test_post(self):
         """ WARNING! This *actually* creates a post! """
-        
         return True
-        
         # Create a ZooniBot instance 
         zoonibot = ZooniBot(username="zoonibot", \
                             api_key="d1b5be9242fb65de9372")
@@ -48,4 +46,10 @@ class TestZoonibot(object):
         zoonibot = ZooniBot(username="zoonibot", \
                             api_key="d1b5be9242fb65de9372")
         
-        print zoonibot.search_comments(tags=["ZooniBot"]).next()
+        comment_generator = zoonibot.search_comments(tags=["planet"])
+        
+        comments = []
+        for comment in comment_generator:
+            comments.append(comment)
+        
+        assert len(comments) > 0
