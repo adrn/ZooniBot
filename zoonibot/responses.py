@@ -18,3 +18,13 @@ def yourmom_response(zoocomment):
     zooresponse.author = ''
 
     return zooresponse
+
+def help_response(zoocomment):
+    """Returns a ZooniverseComment object with help information based
+    on the tags in the input ZooniverseComment object.
+    """
+
+    
+
+
+    pass
