@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+from zoonibot.bot import ZooniBot
+from zoonibot.responses import planet_binaries_response
+from zoonibot.finders import find_planet_binaries
+
+def main():
+    bot = ZooniBot(username="zoonibot", api_key="d1b5be9242fb65de9372")
+
+    for t in find_planet_binaries(bot, since="2012-07-10"):
+        print "Responding to %s with %s" % (t, planet_binaries_response(t))
+    
+    bot.find_and_respond(find_planet_binaries, planet_binaries_response)
+
+if __name__ == "__main__":
+    main()
