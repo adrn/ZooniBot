@@ -8,6 +8,7 @@ import json
 # Project
 import entry
 from time import sleep
+import zootime
 
 class Bot(object):
 
@@ -84,9 +85,9 @@ class ZooniBot(CommentBot):
             raise ValueError("Post failed with response code: {}".format(response_code))
 
 
-    def search_comments(self, tags=[], since_date="2012-07-10"):
+    def search_comments(self, tags=[],
+                        since_date=zootime.zoo_yesterday()):
         """ """
-        # TODO: since_data parameter should be *yesterday*, using datetime module
         # TODO: check tags to make sure it's a list-like container
         
         per_page = 10
