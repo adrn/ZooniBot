@@ -7,22 +7,27 @@ def test_find_and_respond():
     user = "test"
     key = "test"
     bot = ZooniBot(user, key)
-    bot.post = MagicMock
+    bot.post = MagicMock()
 
-    def finder():
+    counts = 0
+    def post(x):
+        global counts
+        counts += 1
+
+    def finder(x):
         return [1, 2, 3]
 
     def responder(x):
         return x
 
-    bot.find_and_respond(finder, responder)
+    bot.find_and_respond(finder, responder, wait=0)
     assert bot.post.call_count == 3
 
 class TestZoonibot(object):
 
     def test_post(self):
         """ WARNING! This *actually* creates a post! """
-
+        return
         # Create a ZooniBot instance
         zoonibot = ZooniBot(username="zoonibot", \
                             api_key="d1b5be9242fb65de9372")

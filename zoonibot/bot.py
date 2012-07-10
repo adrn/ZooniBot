@@ -11,15 +11,15 @@ class Bot(object):
     def post(self, comment):
         raise NotImplemented
 
-    def find_and_respond(self, finder, responder):
+    def find_and_respond(self, finder, responder, wait=1):
         """ Use finder and responder utilities to respond to comments
         Parameters
         ----------
         finder : function to return Comments object
         responder : function to create ZooniverseComments from a input comment
         """
-        for comment in finder():
-            sleep(1)
+        for comment in finder(self):
+            sleep(wait)
             r = responder(comment)
             self.post(r)
 
@@ -76,13 +76,8 @@ class ZooniBot(CommentBot):
         request = urllib2.Request(self.base_url, headers=headers, data=json.dumps(data))
         response = urllib2.urlopen(request)
         response_code = response.getcode()
-<<<<<<< HEAD
 
-        if response_code != 200:
-=======
-        
         if response_code != 201:
->>>>>>> 21b22cd1865222af020d08e2d7a764c131d4b79c
             raise ValueError("Post failed with response code: {}".format(response_code))
 
     def search_comments(self, tags):
