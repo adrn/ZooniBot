@@ -7,7 +7,7 @@ class Entry(object):
             self.__setattr__(field, kwargs[field])
 
 class ZooniverseComment(Entry):
-    _fields = ['comment', 'author', 'discusion', 'light_curve', 'source']
+    _fields = ['comment', 'author', 'discussion', 'light_curve', 'source']
 
 class Comment(Entry):
     _fields = ['id', 'body', 'created_at', 'mentions', 'tags']
