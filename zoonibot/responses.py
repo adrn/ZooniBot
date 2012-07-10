@@ -1,6 +1,11 @@
 import entry
 import copy
 
+def response_packer(old_comment, response):
+    result = copy.deepcopy(old_comment)
+    result.comment = response
+    return result
+
 def yourmom_response(zoocomment):
     """Returns a ZooniverseComment object containing a canned response
     to an input ZooniverseComment object.
@@ -18,3 +23,8 @@ def yourmom_response(zoocomment):
     zooresponse.author = ''
 
     return zooresponse
+
+def help_response(zoocomment):
+
+    result = entry.Comment(body="'Hiya Have you tried our [tutorial video](http://www.planethunters.org/site_guide#video "") and [site guide](http://www.planethunters.org/site_guide "") - they are both good resources for new people")
+    return response_packer(zoocomment, result)
