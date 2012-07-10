@@ -4,7 +4,6 @@ import os,sys
 import base64
 import urllib, urllib2
 import json
-<<<<<<< HEAD
 
 # Project
 import entry
