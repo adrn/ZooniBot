@@ -127,7 +127,7 @@ class ZooniBot(CommentBot):
         data = {"discussion_id" : discussion_id,
                 "comment" : {"body" : comment.body}}
         result = self._post_request(data)
-        response_code = response.getcode()
+        response_code = result.getcode()
 
         if response_code != 201:
             raise ValueError("Post failed with response code: {}".format(response_code))
@@ -151,11 +151,12 @@ class ZooniBot(CommentBot):
         def get_data(page):
             data = {"page" : page, \
                     "per_page" : per_page, \
-                    "since" : since_date}
+                    "since" : "2012-01-01"} ## TODO: FIX
             # APW TODO: this is hellish.. maybe we move to using 'request' package?
             params = urllib.urlencode(data)
             params = "{}{}".format(params, encode_tags(tags))
             url = "{}?{}".format(self.base_url,params)
+            print url
             response = self._get_request(url).read()
             json_data = json.loads(response)
             return json_data
@@ -187,6 +188,6 @@ def comment_dictionary_to_zooniversecomment(comment_dict):
 
 def encode_tags(tags):
     result = '&'.join([urllib.urlencode({'tags':t}) for t in tags])
-    if len(tags) > 0:
-        result = '&tags=' + result
+    if len(tags) != 0:
+        result = '&' + result
     return result
