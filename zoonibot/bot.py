@@ -1,15 +1,9 @@
-""" 
-
-"""
+""" """
 
 # Standard Library
 import os,sys
 import urllib, urllib2
-try:
-    # simplejson *is* json, but this works for earlier versions of Python
-    import simplejson as json
-except ImportError: 
-    import json
+import json
     
 class Bot(object):
     pass
@@ -18,13 +12,19 @@ class CommentBot(Bot):
     pass
     
 class ZooniBot(CommentBot):
-    """ The ZooniBot is an automated robot for commenting on
-        Zooniverse objects.
+    """ The ZooniBot is an automated robot for commenting on Zooniverse 
+        objects. The ZooniBot is specified by an API key, which is unique
+        to the zoonibot user on zooniverse.org. This API key is given to 
+        the bot by instantiating an API() object, and passing it to bot
+        instantiator.
     """
     
-    def __init__(self, api_key):
-        self.api_key = api_key
+    def __init__(self, api):
+        self.api = api
     
     def post(comment):
         """ Post the comment to the Zooniverse by zoonibot """
-        pass
+        raise NotImplementedError()
+    
+    def search_comments(tags):
+        raise NotImplementedError()

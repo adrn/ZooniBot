@@ -6,7 +6,7 @@ class Entry(object):
                 raise TypeError("Invalid keyword: %s %s" % (field, self._fields))
             self.__setattr__(field, kwargs[field])
 
-class CommentContainer(Entry):
+class ZooniverseComment(Entry):
     _fields = ['comment', 'author', 'discusion', 'light_curve', 'source']
 
 class Comment(Entry):
