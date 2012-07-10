@@ -1,15 +1,19 @@
+from mock import MagicMock
+
 from bot import ZooniBot
-from api import API
 
-class TestZoonibot(object):
-    pass
+def test_find_and_respond():
+    user = "test"
+    key = "test"
+    bot = ZooniBot(user, key)
+    bot.post = MagicMock
 
-def test_zoonibot():
-    api_key = "d1b5be9242fb65de9372"
-    url = ""
+    def finder():
+        return [1, 2, 3]
 
-    # Create an API object
-    api = API('user', 'key')
+    def responder(x):
+        return x
 
-    # Create a ZooniBot instance
-    zoonibot = ZooniBot(api)
+    bot.find_and_respond(finder, responder)
+    assert bot.post.call_count == 3
+
