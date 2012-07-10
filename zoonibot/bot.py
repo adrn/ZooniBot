@@ -86,7 +86,8 @@ class ZooniBot(CommentBot):
     def search_comments(self, tags, since_date="2012-07-10"):
         """ """
         # TODO: since_data parameter should be *yesterday*, using datetime module
-
+        # TODO: check tags to make sure it's a container
+        
         per_page = 10
         
         data = {"page" : 1, \
@@ -125,7 +126,6 @@ class ZooniBot(CommentBot):
             # returns a generator for comment objects
             for comment_dict in json_data["comments"]:
                 yield comment_dictionary_to_zooniversecomment(comment_dict)
-            
 
 def comment_dictionary_to_zooniversecomment(comment_dict):
     """ """
