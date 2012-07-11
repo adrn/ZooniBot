@@ -13,33 +13,33 @@ Current functionality being implemented :
 
 Getting Started
 ---------------
-The central object is the ZooniBot class::
+The central object is the ZooniBot class:
 
     import zoonibot
     from zoonibot.bot import ZooniBot
     bot = Zoonibot(user_name, api_key)
 
-To search for comments matching the tag "transit" since 2012-06-01::
+To search for comments matching the tag "transit" since 2012-06-01:
 
     for comment in bot.search_comments(tags=['transit'], since_date="2012-06-01"):
         print comment
 
 
-To post a single comment to a given discussion::
+To post a single comment to a given discussion:
 
-   from zoonibot.entry import Discussion, Comment, ZooniverseComment
-   c = Comment(body="Testing 123")
-   d = Discussion(id = '_your_discussion_id_here')
-   zc = ZooniverseComment(comment=c, discussion=d)
-   bot.post(zc)
+    from zoonibot.entry import Discussion, Comment, ZooniverseComment
+    c = Comment(body="Testing 123")
+    d = Discussion(id = '_your_discussion_id_here')
+    zc = ZooniverseComment(comment=c, discussion=d)
+    bot.post(zc)
 
 In addition, there are several finder and responder functions which
-search for and respond to comments (shocker). They are easy to implement or extend to your liking. To use the auto help responder::
+search for and respond to comments (shocker). They are easy to implement or extend to your liking. To use the auto help responder:
 
-   from zoonibot.finders import find_help_tags
-   from zoonibot.responses import help_response
+    from zoonibot.finders import find_help_tags
+    from zoonibot.responses import help_response
 
-   bot.find_and_respond(find_help_tags, help_response)
+    bot.find_and_respond(find_help_tags, help_response)
 
 
 Low level GET/POST structure of the planethunter api
