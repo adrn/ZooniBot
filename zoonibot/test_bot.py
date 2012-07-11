@@ -1,3 +1,4 @@
+import os
 import json
 
 from mock import MagicMock
@@ -9,8 +10,14 @@ import entry
 class TestZoonibot(object):
 
     def setup_method(self, method):
-        zoonibot = ZooniBot(username="zoonibot", \
-                            api_key="d1b5be9242fb65de9372")
+        try:
+            username = os.environ["ZOONAME"]
+            api_key = os.environ["ZOOKEY"]
+        except KeyError:
+            raise KeyError("Zooniverse environment variables not set!")
+            
+        zoonibot = ZooniBot(username=username, \
+                            api_key=api_key)
         zoonibot.urlcls = MagicMock() # do not remove! will create posts
         self.bot = zoonibot
 
