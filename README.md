@@ -17,7 +17,7 @@ The central object is the ZooniBot class:
 
     import zoonibot
     from zoonibot.bot import ZooniBot
-    bot = Zoonibot(user_name, api_key)
+    bot = ZooniBot(user_name, api_key)
 
 To search for comments matching the tag "transit" since 2012-06-01:
 
