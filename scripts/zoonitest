@@ -5,6 +5,8 @@ import os
 from zoonibot.bot import ZooniBot
 from zoonibot.responses import test_response
 from zoonibot.finders import find_test_tags
+from zoonibot.responses import help_response
+from zoonibot.finders import find_help_tags
 
 def main():
     try:
@@ -12,7 +14,7 @@ def main():
         api_key = os.environ["ZOOKEY"]
     except KeyError:
         raise KeyError("Zooniverse environment variables not set!")
-
+    
     bot = ZooniBot(username=username, api_key=api_key)
 
     sincewhen = "2013-09-17"
