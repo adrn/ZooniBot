@@ -12,13 +12,12 @@ def main():
         api_key = os.environ["ZOOKEY"]
     except KeyError:
         raise KeyError("Zooniverse environment variables not set!")
-        
+    
     bot = ZooniBot(username=username, api_key=api_key)
-
-    for t in find_help_tags(bot):
+    
+    for t in find_help_tags(bot, since="2010-12-01"):
         print "Responding to %s with %s" % (t, help_response(t))
     bot.find_and_respond(find_help_tags, help_response)
-
 
 if __name__ == "__main__":
     main()
