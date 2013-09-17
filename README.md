@@ -16,6 +16,10 @@ Getting Started
 The first thing to do is set the `ZOONAME` and `ZOOKEY` environment 
 variables on your system. `ZOONAME` should be set to the bot username
 on the forum (e.g., zoonibot), and `ZOOKEY` should be the API key.
+For example:
+
+    export ZOONAME=zoonibot
+    export ZOOKEY=sdghijaoi902ijod8
 
 The central object is the ZooniBot class:
 
