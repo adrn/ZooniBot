@@ -75,8 +75,8 @@ class ZooniBot(CommentBot):
         headers = dict()
         headers["Content-Type"] = "application/json"
         base64string = base64.encodestring(
-            "{}:{}".format(self.username, self.api_key))[:-1]
-        headers["Authorization"] = "Basic {}".format(base64string)
+            "{0}:{1}".format(self.username, self.api_key))[:-1]
+        headers["Authorization"] = "Basic {0}".format(base64string)
         return headers
 
     def _get_request(self, url, header=None):
@@ -156,7 +156,7 @@ class ZooniBot(CommentBot):
                     ('per_page', per_page),
                     ('since', since)]
             data.extend([('tags', t) for t in tags])
-            url = "{}?{}".format(self.base_url, urllib.urlencode(data))
+            url = "{0}?{1}".format(self.base_url, urllib.urlencode(data))
 
             response = self._get_request(url).read()
             json_data = json.loads(response)
