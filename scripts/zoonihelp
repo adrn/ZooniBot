@@ -15,9 +15,11 @@ def main():
 
     bot = ZooniBot(username=username, api_key=api_key)
 
-    for t in find_help_tags(bot, since="2010-12-01"):
+    sincewhen = "2013-09-17"
+    for t in find_help_tags(bot, sincewhen):
         print "Responding to %s with %s" % (t, help_response(t))
-    #bot.find_and_respond(find_help_tags, help_response)
+        # find_help_tags_since = lambda x : find_help_tags(x, sincewhen)
+        # bot.find_and_respond(find_help_tags_since, help_response)
 
 if __name__ == "__main__":
     main()

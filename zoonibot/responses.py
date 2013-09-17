@@ -38,3 +38,8 @@ def planet_binaries_response(zooniverse_comment):
     response_comment = entry.Comment(body="You said there was a planet transit but this is a known #eclipsingbinary where there is a star moving in front of another star. #zoonibotans")
     return response_packer(zooniverse_comment, response_comment)
     
+def zoonibot_response(zooniverse_comment):
+    """ TODO: describe! """
+    response_comment = entry.Comment(body="""You called? I'm here to help! Perhaps you want to know about [I am Bender please insert girder]?""")
+    return response_packer(zooniverse_comment, response_comment)
+

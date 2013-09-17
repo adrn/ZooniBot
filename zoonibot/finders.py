@@ -47,3 +47,7 @@ def find_planet_binaries(bot, since="2012-07-10"):
 def find_kepler_planets(bot):
     raise NotImplemented
 
+def find_zoonibot_tag(bot, since="2012-07-10"):
+    comments = list(bot.search_comments(['zoonibot'], since_date=since))
+    return comments_without_zoonibot_responses(bot, comments)
+

@@ -3,8 +3,8 @@
 import os
 
 from zoonibot.bot import ZooniBot
-from zoonibot.responses import test_response
-from zoonibot.finders import find_test_tags
+from zoonibot.responses import zoonibot_response
+from zoonibot.finders import find_zoonibot_tag
 
 def main():
     try:
@@ -16,10 +16,10 @@ def main():
     bot = ZooniBot(username=username, api_key=api_key)
 
     sincewhen = "2013-09-17"
-    for t in find_test_tags(bot, sincewhen):
-        print "Responding to %s with %s" % (t, test_response(t))
-        # find_test_tags_since = lambda x : find_test_tags(x, sincewhen)
-        # bot.find_and_respond(find_test_tags_since, test_response)
+    for t in find_zoonibot_tag(bot, sincewhen):
+        print "Responding to %s with %s" % (t, zoonibot_response(t))
+        # find_zoonibot_tag_since = lambda x : find_zoonibot_tag(x, sincewhen)
+        # bot.find_and_respond(find_zoonibot_tag_since, zoonibot_response)
 
 if __name__ == "__main__":
     main()
