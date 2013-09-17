@@ -6,6 +6,19 @@
 import os
 import re
 
+def comment_contains_words(comment, wordlist=[]):
+    hits = {}
+    for w in wordlist:
+	hits[w] = re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(comment.body)
+    return hits
+
+def comment_contains_at_least_one(comment, wordlist=[]):
+    hits = comment_contains_words(comment,wordlist)
+    for hit in hits:
+        if hit:
+            return comment
+    return None
+
 def comments_without_zoonibot_responses(bot, comments):
     zoos = bot.search_comments(['zoonibotans'], since_date='2012-07-10')
     ids = set(z.discussion.id for z in zoos)
