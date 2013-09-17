@@ -9,12 +9,12 @@ import re
 def comment_contains_words(comment, wordlist=[]):
     hits = {}
     for w in wordlist:
-	hits[w] = re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(comment.body)
+		hits[w] = re.compile(r'\b({0})\b'.format(w), flags=re.IGNORECASE).search(comment.comment.body)
     return hits
 
 def comment_contains_at_least_one(comment, wordlist=[]):
     hits = comment_contains_words(comment,wordlist)
-    for hit in hits:
+    for hit in hits.values():
         if hit:
             return comment
     return None
@@ -30,8 +30,15 @@ def find_help_tags(bot, since="2012-07-10"):
     return comments_without_zoonibot_responses(bot, comments)
 
 def find_test_tags(bot, since="2012-07-10"):
-	    comments = list(bot.search_comments(['booya'], since_date=since))
-	    return comments_without_zoonibot_responses(bot, comments)
+		comments = list(bot.search_comments(['booya'], since_date=since))
+		comments2= comments_without_zoonibot_responses(bot, comments)
+		words = ['flibble']
+		results = []
+		for c in comments2: 
+			x = comment_contains_at_least_one(c,words)
+			if x:
+				results.append(c)
+		return results
 
 def find_planet_binaries(bot, since="2012-07-10"):
     # TODO: since here should also default to yesterday?

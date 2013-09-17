@@ -19,7 +19,7 @@ def main():
 
     sincewhen = "2013-09-17"
     for t in find_test_tags(bot, sincewhen):
-        print "Responding to %s with %s" % (t, test_response(t))
+        print "Responding to %s\n with %s\n" % (t, test_response(t))
         # find_test_tags_since = lambda x : find_test_tags(x, sincewhen)
         # bot.find_and_respond(find_test_tags_since, test_response)
 
