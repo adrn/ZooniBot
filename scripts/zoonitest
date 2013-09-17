@@ -17,7 +17,7 @@ def main():
 
     for t in find_test_tags(bot, since="2010-12-01"):
         print "Responding to %s with %s" % (t, test_response(t))
-    	bot.find_and_respond(find_test_tags, test_response)
+    	# bot.find_and_respond(find_test_tags, test_response)
 
 if __name__ == "__main__":
     main()
