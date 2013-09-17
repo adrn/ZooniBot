@@ -28,7 +28,7 @@ def help_response(zooniverse_comment):
 
 def test_response(zooniverse_comment):
 	    """ TODO: describe! """
-	    response_comment = entry.Comment(body="""Oh I say!""")
+	    response_comment = entry.Comment(body="""I daresay, Keep Calm and Classify On! #zoonibotans""")
 	    return response_packer(zooniverse_comment, response_comment)
 
 def planet_binaries_response(zooniverse_comment):
