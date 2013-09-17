@@ -21,6 +21,11 @@ For example:
     export ZOONAME=zoonibot
     export ZOOKEY=sdghijaoi902ijod8
 
+Next, you want to either install the package, or add the path of the
+project to your PYTHONPATH env variable:
+
+    export PYTHONPATH=$PYTHONPATH:/path/to/zoonibot/
+
 The central object is the ZooniBot class:
 
     import zoonibot
