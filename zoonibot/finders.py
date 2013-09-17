@@ -11,11 +11,12 @@ def comments_without_zoonibot_responses(bot, comments):
     ids = set(z.discussion.id for z in zoos)
     return [c for c in comments if c.discussion.id not in ids]
 
-def find_help_tags(bot):
-    comments = list(bot.search_comments(['help']))
+def find_help_tags(bot, since="2012-07-10"):
+    # TODO: since here should also default to yesterday?
+    comments = list(bot.search_comments(['help'], since_date=since))
     return comments_without_zoonibot_responses(bot, comments)
 
-def find_planet_binaries(bot, since=None):
+def find_planet_binaries(bot, since="2012-07-10"):
     # TODO: since here should also default to yesterday?
     
     pattr = re.compile("(.*zoonibot)*")
