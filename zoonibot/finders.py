@@ -17,8 +17,7 @@ def find_help_tags(bot, since="2012-07-10"):
     return comments_without_zoonibot_responses(bot, comments)
 
 def find_test_tags(bot, since="2012-07-10"):
-	    # TODO: since here should also default to yesterday?
-	    comments = list(bot.search_comments(['ZoonibotZoonibotZoonibot'], since_date=since))
+	    comments = list(bot.search_comments(['booya'], since_date=since))
 	    return comments_without_zoonibot_responses(bot, comments)
 
 def find_planet_binaries(bot, since="2012-07-10"):
