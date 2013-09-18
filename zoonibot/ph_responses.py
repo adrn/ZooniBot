@@ -69,10 +69,7 @@ def galaxyzoo_response(ra, dec, sr=0.01):
 def planethunters_response(ra, dec):
     """ZooniBot's response to a transit candidate.
     """
-    result = """Thanks for identifying a possible transit!
-                Be aware however, that transits are sometimes caused by the contamination of nearby stars.
-                For this reason, please check 
-                <a href='http://surveys.roe.ac.uk:8080/wsa/GetImage?ra={0}&dec={1}&database=wserv4v20101019&frameType=stack&obsType=object&programmeID=10209&mode=show&archive=%20wsa&project=wserv4'>a cut-out image of the area near the star</a> to check for nearby neighbours.""".format(ra, dec)
+    result = """Thanks for identifying a possible transit!  Be aware however, that transits are sometimes caused by the contamination of nearby stars.  For starters, please check [a cut-out image of the area near the star](http://surveys.roe.ac.uk:8080/wsa/GetImage?ra={0}&dec={1}&database=wserv4v20101019&frameType=stack&obsType=object&programmeID=10209&mode=show&archive=%20wsa&project=wserv4) for nearby neighbours. #zoonibotans""".format(ra, dec)
     
 #result = "http://skyview.gsfc.nasa.gov/cgi-bin/images?Position=60,50&Survey=DSS2R&Return=JPG&Invert=True"
 
