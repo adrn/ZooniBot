@@ -1,0 +1,32 @@
+#!/usr/bin/env python
+
+import os
+
+from zoonibot.bot import ZooniBot
+from zoonibot.finders import find_transit_queries
+from zoonibot.responses import gammador_response
+import zoonibot.ph_responses as phr
+
+def main():
+    try:
+        username = os.environ["ZOONAME"]
+        api_key = os.environ["ZOOKEY"]
+    except KeyError:
+        raise KeyError("Zooniverse environment variables not set!")
+    
+    bot = ZooniBot(username=username, api_key=api_key)
+
+    sincewhen = "2013-09-17"
+    for t in find_transit_queries(bot, sincewhen):
+        coords = phr.phid_to_coordinates(t.light_curve.zooniverse_id)
+        if coords:
+            ra, decl = coords
+            resp = phr.planethunters_response(ra,decl)
+            find_test_tags_since = lambda x : find_test_tags(x, sincewhen)
+            specialized_response = lambda x : transit_response(x, bodytext=resp)
+            bot.find_and_respond(find_gam_dor_hash, specialized_response)
+        else:
+            print "Coordinate lookup failed: can't respond to ID "+t.light_curve.zooniverse_id
+
+if __name__ == "__main__":
+    main()
