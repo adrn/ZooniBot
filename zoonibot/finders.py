@@ -51,13 +51,13 @@ def find_gam_dor_hash(bot, since='2013-09-17'):
 	comments = list(bot.search_comments(['gdor'], since_date=since))
 	return comments_without_zoonibot_responses(bot, comments)		
 
-def find_gam_dor_text(bot, since='2013-09-05'):
-		comments = list(bot.search_comments([''], since_date=since))
+def find_gam_dor_text(bot, since='2013-09-17'):
+		comments = list(bot.search_comments(since_date=since))
 		comments2= comments_without_zoonibot_responses(bot, comments)
-		words = ['gamma','doradis']
+		words = ['Gamma','Doradus']
 		results = []
 		for c in comments2: 
-			x = comment_contains_all(c,words)
+			x = comment_contains_at_least_one(c,words)
 			if x:
 				results.append(c)
 		return results
