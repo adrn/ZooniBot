@@ -19,8 +19,8 @@ def main():
     sincewhen = "2013-09-17"
     for t in find_gam_dor_hash(bot, sincewhen):
         print "Responding to %s\n with %s\n" % (t, gammador_response(t))
-        find_test_tags_since = lambda x : find_test_tags(x, sincewhen)
-        bot.find_and_respond(find_gam_dor_hash, gammador_response)
+        find_gam_dor_hash_since = lambda x : find_gam_dor_hash(x, sincewhen)
+        bot.find_and_respond(find_gam_dor_hash_since, gammador_response)
 		
 if __name__ == "__main__":
     main()
