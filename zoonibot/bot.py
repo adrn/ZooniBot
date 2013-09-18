@@ -16,6 +16,12 @@ class Bot(object):
     def post(self, comment):
         raise NotImplemented
 
+    def respond_to_comment(self, comment, responder, wait=1):
+        """ For a single comment, use the given responder.
+        """
+        r = responder(comment)
+        self.post(r)
+
     def find_and_respond(self, finder, responder, wait=1):
         """ Use finder and responder utilities to respond to comments
 
