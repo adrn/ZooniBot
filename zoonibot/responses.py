@@ -43,3 +43,6 @@ def zoonibot_response(zooniverse_comment):
     response_comment = entry.Comment(body="""You called? I'm here to help! Perhaps you want to know about [I am Bender please insert girder]?""")
     return response_packer(zooniverse_comment, response_comment)
 
+def gammador_response(zooniverse_comment):
+	response_comment = entry.Comment(body="""I am Zoonibot. The people who `helpfully' programmed me have asked me to say at this juncture that a Gamma Doradus variable is a type of star that undergoes periodic variations in brightness. There's more info here, http://en.wikipedia.org/wiki/Gamma_Doradus_variable , for what it's worth. #zoonibotans""")
+	return response_packer(zooniverse_comment, response_comment)

@@ -19,12 +19,19 @@ def comment_contains_at_least_one(comment, wordlist=[]):
             return comment
     return None
 
+def comment_contains_all(comment, wordlist=[]):
+	hits = comment_contains_words(comment,wordlist)
+	for w in wordlist:
+		if w==None:
+			return None
+	return comment
+	
 def comments_without_zoonibot_responses(bot, comments):
     zoos = bot.search_comments(['zoonibotans'], since_date='2012-07-10')
     ids = set(z.discussion.id for z in zoos)
     return [c for c in comments if c.discussion.id not in ids]
 
-def find_help_tags(bot, since="2012-07-10"):
+def find_help_tags(bot, since="2013-09-17"):
     # TODO: since here should also default to yesterday?
     comments = list(bot.search_comments(['help'], since_date=since))
     return comments_without_zoonibot_responses(bot, comments)
@@ -36,6 +43,21 @@ def find_test_tags(bot, since="2012-07-10"):
 		results = []
 		for c in comments2: 
 			x = comment_contains_at_least_one(c,words)
+			if x:
+				results.append(c)
+		return results
+		
+def find_gam_dor_hash(bot, since='2013-09-17'):
+	comments = list(bot.search_comments(['gdor'], since_date=since))
+	return comments_without_zoonibot_responses(bot, comments)		
+
+def find_gam_dor_text(bot, since='2013-09-05'):
+		comments = list(bot.search_comments([''], since_date=since))
+		comments2= comments_without_zoonibot_responses(bot, comments)
+		words = ['gamma','doradis']
+		results = []
+		for c in comments2: 
+			x = comment_contains_all(c,words)
 			if x:
 				results.append(c)
 		return results
