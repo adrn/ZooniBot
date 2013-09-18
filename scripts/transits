@@ -4,7 +4,7 @@ import os
 
 from zoonibot.bot import ZooniBot
 from zoonibot.finders import find_transit_queries
-from zoonibot.responses import gammador_response
+from zoonibot.responses import transit_response
 import zoonibot.ph_responses as phr
 
 def main():
@@ -20,11 +20,12 @@ def main():
     for t in find_transit_queries(bot, sincewhen):
         coords = phr.phid_to_coordinates(t.light_curve.zooniverse_id)
         if coords:
+            print "Good coordinate for "+t.light_curve.zooniverse_id
             ra, decl = coords
             resp = phr.planethunters_response(ra,decl)
             find_test_tags_since = lambda x : find_test_tags(x, sincewhen)
             specialized_response = lambda x : transit_response(x, bodytext=resp)
-            bot.find_and_respond(find_gam_dor_hash, specialized_response)
+            bot.find_and_respond(find_transit_queries, specialized_response)
         else:
             print "Coordinate lookup failed: can't respond to ID "+t.light_curve.zooniverse_id
 
