@@ -6,6 +6,13 @@
 import os
 import re
 
+def comment_is_a_question(comment):
+    match = (comment.comment.body[-1]) == "?"
+    if match:
+        return True
+    else:
+        return False
+
 def comment_contains_words(comment, wordlist=[]):
     hits = {}
     for w in wordlist:
@@ -46,7 +53,16 @@ def find_test_tags(bot, since="2012-07-10"):
 			if x:
 				results.append(c)
 		return results
-		
+
+def find_transit_queries(bot, since='2013-09-17'):
+    comments = list(bot.search_comments(['transit', 'transits'], since_date=since))
+    comments2 = comments_without_zoonibot_responses(bot,comments)
+    results = []
+    for c in comments2:
+        if comment_is_a_question(c):
+            results.append(c)
+    return results
+
 def find_gam_dor_hash(bot, since='2013-09-17'):
 	comments = list(bot.search_comments(['gdor'], since_date=since))
 	return comments_without_zoonibot_responses(bot, comments)		
