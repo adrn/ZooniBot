@@ -17,10 +17,10 @@ def main():
     bot = ZooniBot(username=username, api_key=api_key)
 
     sincewhen = "2013-09-17"
-    for t in find_gam_dor_hash(bot, sincewhen):
+    for t in find_gam_dor_text(bot, sincewhen):
         print "Responding to %s\n with %s\n" % (t, gammador_response(t))
         find_test_tags_since = lambda x : find_test_tags(x, sincewhen)
-        bot.find_and_respond(find_gam_dor_hash, gammador_response)
+        bot.find_and_respond(find_gam_dor_text, gammador_response)
 		
 if __name__ == "__main__":
     main()
