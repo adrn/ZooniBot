@@ -23,9 +23,9 @@ def main():
             print "Good coordinate for "+t.light_curve.zooniverse_id
             ra, decl = coords
             resp = phr.planethunters_response(ra,decl)
-            find_test_tags_since = lambda x : find_test_tags(x, sincewhen)
+            find_transit_queries_since = lambda x : find_transit_queries(x, sincewhen)
             specialized_response = lambda x : transit_response(x, bodytext=resp)
-            bot.find_and_respond(find_transit_queries, specialized_response)
+            bot.find_and_respond(find_transit_queries_since, specialized_response)
         else:
             print "Coordinate lookup failed: can't respond to ID "+t.light_curve.zooniverse_id
 
